@@ -1,14 +1,14 @@
-# iStoreOS 云编译 - 京东云 RE-SP-01B (MT7621)
+# ImmortalWrt 云编译 - 京东云 RE-SP-01B (MT7621)
 
-基于 GitHub Actions 自动编译 iStoreOS 固件，适配京东云 RE-SP-01B 路由器（MT7621 芯片）。
+基于 GitHub Actions 自动编译 ImmortalWrt 固件，适配京东云 RE-SP-01B 路由器（MT7621 芯片）。
 
 ## 设备信息
 
-- **芯片**: MediaTek MT7621AT (双核 880MHz)
+- **芯片**: 联发科 MT7621AT（双核 880MHz）
 - **内存**: 512MB DDR3
 - **闪存**: 16MB SPI Flash
-- **无线**: MT7615DN (2.4G + 5G 双频)
-- **网口**: 1 WAN + 3 LAN (千兆)
+- **无线**: MT7615DN（2.4G + 5G 双频）
+- **网口**: 1个WAN + 3个LAN（千兆）
 
 ## 已内置插件
 
@@ -29,7 +29,7 @@
 
 ## 默认配置
 
-- **LAN IP**: 192.168.5.1（可在 diy-part2.sh 修改）
+- **局域网IP**：192.168.12.1（可在 diy-part2.sh 中修改）
 - **主机名**: JDCloud-Router
 - **时区**: Asia/Shanghai
 - **root 密码**: 无（首次登录请设置）
@@ -55,8 +55,8 @@ istoreos-ramips-mt7621-jdcloud_re-sp-01b-squashfs-sysupgrade.bin
 istoreos-ramips-mt7621-jdcloud_re-sp-01b-squashfs-factory.bin
 ```
 
-- `sysupgrade.bin`: 从 OpenWrt/iStoreOS 系统内升级
-- `factory.bin`: 从原厂固件刷入
+- `sysupgrade.bin`：从 OpenWrt/iStoreOS 系统内升级
+- `factory.bin`：从原厂固件刷入
 
 ### 3. 刷入固件
 
@@ -64,7 +64,7 @@ istoreos-ramips-mt7621-jdcloud_re-sp-01b-squashfs-factory.bin
 2. 浏览器进入路由器管理页面
 3. 系统 → 备份/升级 → 选择固件 → 刷入
 4. 等待重启完成（约 3-5 分钟）
-5. 浏览器访问 `http://192.168.5.1`
+5. 浏览器访问 `http://192.168.12.1`
 
 ## 自定义配置
 
@@ -86,10 +86,10 @@ CONFIG_PACKAGE_luci-app-xxx=y
 
 ```bash
 # 修改 LAN IP
-sed -i 's/192.168.100.1/192.168.5.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.100.1/192.168.12.1/g' package/base-files/files/bin/config_generate
 
 # 修改主机名
-sed -i 's/IStoreOS/MyRouter/g' package/base-files/files/bin/config_generate
+sed -i 's/ImmortalWrt/MyRouter/g' package/base-files/files/bin/config_generate
 ```
 
 ### 添加第三方软件源
