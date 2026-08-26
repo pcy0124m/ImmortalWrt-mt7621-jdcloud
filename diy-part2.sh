@@ -7,9 +7,9 @@
 cd openwrt
 
 # ---------- 修改默认 LAN IP ----------
-# iStoreOS 默认一般是 192.168.100.1，这里改成 192.168.5.1
+# iStoreOS 默认一般是 192.168.100.1，这里改成 192.168.12.1
 # 不需要改的话注释掉下面这行
-sed -i 's/192.168.100.1/192.168.5.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.100.1/192.168.12.1/g' package/base-files/files/bin/config_generate
 
 # ---------- 修改默认主机名 ----------
 sed -i 's/IStoreOS/JDCloud-Router/g' package/base-files/files/bin/config_generate
@@ -27,7 +27,7 @@ sed -i "s/'UTC'/'CST-8'\n        set system.@system[-1].zonename='Asia\/Shanghai
 # sed -i 's/disabled=1/disabled=0/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
 # ---------- 修改 root 默认密码（可选，默认无密码） ----------
-# 把下面的密码哈希替换成你想要的密码（用 openssl passwd -1 生成）
+# 将下面的密码哈希替换为你想要的密码（使用 openssl passwd -1 生成）
 # sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' package/base-files/files/etc/shadow
 
 # ---------- 移除不需要的默认包（减小固件体积） ----------
