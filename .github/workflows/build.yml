@@ -1,10 +1,7 @@
-name: Build iStoreOS
-
-# =========新增这一段，修复403报错=========
+name: Build ImmortalWrt‑RE‑SP‑01B
 permissions:
   contents: write
   pull-requests: write
-# ======================================
 
 on:
   workflow_dispatch:
@@ -12,8 +9,8 @@ on:
     - cron: '0 16 * * *'
 
 env:
-  REPO_URL: https://github.com/istoreos/istoreos
-  REPO_BRANCH: istoreos-22.03
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: configs/ramips.config
   DIY_P1_SH: diy-part1.sh
@@ -26,10 +23,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Initialization environment
         env:
@@ -97,7 +93,7 @@ jobs:
         run: df -hT
 
       - name: Upload bin directory
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -113,10 +109,10 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Upload firmware directory
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: iStoreOS_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ImmortalWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
@@ -127,27 +123,29 @@ jobs:
           touch release.txt
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Upload firmware to release
+      - name: 将固件上传至发布版
         uses: softprops/action-gh-release@v1
-        if: steps.tag.outputs.status == 'success' && !cancelled()
-        env:
+        如果: steps.tag.outputs.status == 'success' && !cancelled()
+    环境变量:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
+        使用:
           tag_name: ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
+: ${{ env.FIRMWARE }}/*
 
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@main
-        with:
-          retain_days: 1
+      - 名称: 删除工作流运行
+使用: Mattraks/delete-workflow-runs@v2
+        使用:
+          保留天数: 1
           keep_minimum_runs: 3
 
-      - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@v0.3.3
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-        with:
+      - 名称: 移除旧版本发布
+        使用: dev-drprasad/delete-older-releases@v0.3.3
+        如果: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        使用:
           keep_latest: 3
-          delete_tags: true
-        env:
+          删除标签: true
+    环境变量:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
