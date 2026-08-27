@@ -6,3 +6,8 @@
 
 # 关闭 IPv6（不需要可注释掉）
 # sed -i 's/ip6assign/#ip6assign/g' package/network/config/network/files/network.config 2>/dev/null || true
+
+# 把默认主题从 bootstrap 改成 argon
+sed -i 's#luci-static/bootstrap#luci-static/argon#g' \
+  feeds/luci/modules/luci-base/root/etc/config/luci 2>/dev/null || true
+
