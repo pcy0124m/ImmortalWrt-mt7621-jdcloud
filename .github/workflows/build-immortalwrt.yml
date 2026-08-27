@@ -64,6 +64,6 @@ jobs:
         with:
           name: RE-SP-01B-ImmortalWrt-25.12
           path: |
-            openwrt/bin/targets/ramips/mt7621/*.bin
-            openwrt/build.log
+            ImmortalWrt/bin/targets/ramips/mt7621/*.bin
+            ImmortalWrt/build.log
           retention-days: 7
