@@ -1,0 +1,69 @@
+name: Build ImmortalWrt 25.12 for JDCloud RE-SP-01B
+
+on:
+  workflow_dispatch:        # 手动触发（仓库 Actions 页 → Run workflow）
+  schedule:
+    - cron: '0 2 * * 1'     # 每周一凌晨 2 点自动编译（不需要可删掉这段）
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
+  REPO_BRANCH: openwrt-25.12
+  CONFIG_FILE: config/re-sp-01b.config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 清理并安装依赖
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt-get -y update
+          sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python3-pip python3-ply python3-distutils python3-pyelftools unzip zlib1g-dev file subversion libssl-dev libelf-dev g++ gcc-multilib flex bison
+          sudo timedatectl set-timezone "$TZ"
+
+      - name: 克隆 ImmortalWrt 25.12 源码
+        run: git clone --depth 1 -b $REPO_BRANCH $REPO_URL openwrt
+
+      - name: 执行 diy-part1（更新 feeds 前）
+        run: |
+          cd openwrt
+          [ -e $GITHUB_WORKSPACE/$DIY_P1_SH ] && bash $GITHUB_WORKSPACE/$DIY_P1_SH
+
+      - name: 更新并安装 feeds
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: 执行 diy-part2（生成配置前）
+        run: |
+          cd openwrt
+          [ -e $GITHUB_WORKSPACE/$DIY_P2_SH ] && bash $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      - name: 载入配置
+        run: |
+          cd openwrt
+          cp $GITHUB_WORKSPACE/$CONFIG_FILE .config
+          make defconfig
+
+      - name: 编译固件
+        run: |
+          cd openwrt
+          make -j$(nproc) V=s 2>&1 | tee build.log
+
+      - name: 上传固件
+        uses: actions/upload-artifact@v4
+        with:
+          name: RE-SP-01B-ImmortalWrt-25.12
+          path: |
+            openwrt/bin/targets/ramips/mt7621/*.bin
+            openwrt/build.log
+          retention-days: 7
