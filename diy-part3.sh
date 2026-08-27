@@ -6,4 +6,3 @@ echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >> feeds.con
 
 # --- Argon 主题（含主题配置插件）---
 echo 'src-git argon https://github.com/jerrykuku/luci-theme-argon.git' >> feeds.conf.default
-sed -i '1i src-git argon https://github.com/jerrykuku/luci-theme-argon.git' feeds.conf.default
