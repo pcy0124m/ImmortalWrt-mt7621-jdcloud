@@ -13,6 +13,9 @@ echo 'src-git argon https://github.com/jerrykuku/luci-theme-argon.git' >> feeds.
 # ---------- 添加 Turbo ACC 网络加速源 ----------
 echo 'src-git turboacc https://github.com/chenmozhijin/turboacc.git' >> feeds.conf.default
 
+# ---------- OpenAppFilter 应用过滤（含内核模块，需编译进固件） ----------
+git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+
 # ---------- （可选）添加 PassWall 源，需要的话取消注释 ----------
 # echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' >> feeds.conf.default
 # echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' >> feeds.conf.default
