@@ -114,10 +114,13 @@ jobs:
           # 仓库开启了 GitHub「不可变 Release」：Release 一旦发布就不可变，
           # 直接发布后再上传文件会报 422 immutable release。
           # 所以改为：先以草稿创建 Release 并上传全部文件（草稿可变），再发布。
+          # 注意：$FIRMWARE 位于 openwrt 源码目录内，其 git remote 是 immortalwrt，
+          # 必须用 -R "$GITHUB_REPOSITORY" 显式指定发布到本仓库，否则会 403。
           gh release create "$TAG" * --draft \
+            -R "$GITHUB_REPOSITORY" \
             --title "ImmortalWrt RE-SP-01B $TAG" \
             --notes "ImmortalWrt 24.10 固件（含 OpenAppFilter 应用过滤），管理地址 192.168.12.1，root 默认无密码"
-          gh release edit "$TAG" --draft=false
+          gh release edit "$TAG" --draft=false -R "$GITHUB_REPOSITORY"
 
       - name: Clean old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
