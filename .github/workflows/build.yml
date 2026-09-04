@@ -100,7 +100,8 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == 'true'
         run: |
-          echo "release_tag=$(date +"%Y.%m.%d-%H.%M")" >> $GITHUB_OUTPUT
+          # 用秒级时间避免同名 tag（分钟级会在同一分钟内重复运行时撞车，导致 422 immutable release）
+          echo "release_tag=$(date +"%Y.%m.%d-%H.%M.%S")" >> $GITHUB_OUTPUT
 
       - name: Publish Release
         uses: softprops/action-gh-release@v1
